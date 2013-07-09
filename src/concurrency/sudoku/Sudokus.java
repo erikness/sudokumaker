@@ -44,7 +44,7 @@ public class Sudokus
 				Range.closed(start, end), DiscreteDomain.integers());
 	}
 	
-	private static int[] boxKeysFromKey(int key)
+	public static int[] boxKeysFromKey(int key)
 	{
 		switch(key) {
 		case 1:
