@@ -28,6 +28,11 @@ public class Sudoku {
 		return matrix.get(rowKey, columnKey);
 	}
 	
+	public Optional<Integer> get(Pair<Integer, Integer> location)
+	{
+		return matrix.get(location.getLeft(), location.getRight());
+	}
+	
 	public void erase(Integer rowKey, Integer columnKey)
 	{
 		Optional<Integer> blank = Optional.absent();
