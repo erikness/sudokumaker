@@ -1,5 +1,6 @@
 package concurrency.sudoku;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.ContiguousSet;
@@ -71,6 +72,78 @@ public class Pair<L,R> {
 		  }
 		  
 		  return result;
+	  }
+	  
+	  /**
+	   * Returns a list of pairs in a region defined by the ranges on the right
+	   * and left side of the resulting pairs.
+	   * 
+	   * Though the result is often internally 2-dimensional, the order is not formally
+	   * specified, allowing us to iterate over the result in 1-dimension (or so it seems
+	   * from the client).
+	   * 
+	   * Why an iterable instead of a list? This is a 2-dimensional range, which
+	   * would otherwise have to fit into a List<List>, which is ugly and not very
+	   * decoupled for the original use case: just finding a bunch of cells in an area and 
+	   * iterating over them (order not important).
+	   * 
+	   * An Iterable is better for that, and we don't even have to make an Iterable<Iterable>.
+	   * 
+	   * @param leftRange
+	   * @param rightRange
+	   * @return
+	   */
+	  public static Iterable< Pair<Integer, Integer> > range(
+			  Range<Integer> leftRange, Range<Integer> rightRange) {
+		  
+		  final Iterable<Integer> leftIterable = ContiguousSet.create(
+					leftRange, DiscreteDomain.integers());
+		  final Iterable<Integer> rightIterable = ContiguousSet.create(
+					rightRange, DiscreteDomain.integers());
+		  
+		  final Iterator< Pair<Integer, Integer> > resultIterator = new Iterator< Pair<Integer, Integer> >() {
+			  
+			  private final Iterator<Integer> leftIterator;
+			  private Iterator<Integer> rightIterator;
+			  
+			  private Integer leftCurrent;
+			  
+			  {
+				  leftIterator = leftIterable.iterator(); 
+				  rightIterator = rightIterable.iterator(); 
+				  leftCurrent = leftIterator.next();
+			  }
+			  
+			  public boolean hasNext() 
+			  {
+				  return leftIterator.hasNext();
+			  }
+			  
+			  public Pair<Integer, Integer> next()
+			  {
+				  if (!rightIterator.hasNext()) {
+					  rightIterator = rightIterable.iterator();
+					  leftCurrent = leftIterator.next();
+				  }
+				  
+				  return Pair.of(leftCurrent, rightIterator.next());
+			  }
+			  
+			  public void remove()
+			  {
+				  throw new UnsupportedOperationException();
+			  }
+			  
+		  };
+		  
+		  // Now that we have a formal iterator...
+		  return new Iterable< Pair<Integer, Integer> >() {
+			  public Iterator< Pair<Integer, Integer> > iterator()
+			  {
+				  return resultIterator;
+			  }
+		  };
+		  
 	  }
 
 	  public L getLeft() { return left; }
