@@ -27,6 +27,11 @@ public class Sudokus
 		return cellsInBox;
 	}
 	
+	public static Set<Optional<Integer>> cellsInBoxOf(Sudoku puzzle, Pair<Integer, Integer> location)
+	{
+		return cellsInBoxOf(puzzle, location.getLeft(), location.getRight());
+	}
+	
 	/**
 	 * Returns an iterable of integers from the start to the end
 	 * @param start		The start of the sequence, inclusive
