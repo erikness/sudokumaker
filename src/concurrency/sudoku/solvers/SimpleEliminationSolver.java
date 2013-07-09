@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.google.common.base.Optional;
 
+import concurrency.sudoku.Pair;
 import concurrency.sudoku.Sudoku;
 import concurrency.sudoku.Sudokus;
 

@@ -7,7 +7,6 @@ import java.util.Set;
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayTable;
 
-import concurrency.sudoku.solvers.Pair;
 import concurrency.sudoku.solvers.SingleCellSolver;
 
 public class PuzzleCreator

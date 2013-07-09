@@ -1,4 +1,4 @@
-package concurrency.sudoku.solvers;
+package concurrency.sudoku;
 
 import java.util.List;
 
