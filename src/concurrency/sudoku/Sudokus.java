@@ -36,7 +36,7 @@ public class Sudokus
 	public static Iterable<Integer> intSeq(int start, int end)
 	{
 		return ContiguousSet.create(
-				Range.closed(1, 9), DiscreteDomain.integers());
+				Range.closed(start, end), DiscreteDomain.integers());
 	}
 	
 	private static int[] boxKeysFromKey(int key)
