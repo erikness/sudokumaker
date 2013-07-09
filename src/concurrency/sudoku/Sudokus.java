@@ -32,6 +32,24 @@ public class Sudokus
 		return cellsInBoxOf(puzzle, location.getLeft(), location.getRight());
 	}
 	
+	public static Iterable< Pair<Integer, Integer> > locationsInBoxOf(
+			Sudoku puzzle, Integer rowKey, Integer columnKey)
+	{
+		int[] rowKeys = boxKeysFromKey(rowKey);
+		int[] columnKeys = boxKeysFromKey(columnKey);
+		
+		return Pair.range(
+				Range.closed(rowKeys[0], rowKeys[rowKeys.length - 1]),
+				Range.closed(columnKeys[0], columnKeys[columnKeys.length - 1]));
+				
+	}
+	
+	public static Iterable< Pair<Integer, Integer> > locationsInBoxOf(
+			Sudoku puzzle, Pair<Integer, Integer> location)
+	{
+		return locationsInBoxOf(puzzle, location.getLeft(), location.getRight());
+	}
+	
 	/**
 	 * Returns an iterable of integers from the start to the end
 	 * @param start		The start of the sequence, inclusive
