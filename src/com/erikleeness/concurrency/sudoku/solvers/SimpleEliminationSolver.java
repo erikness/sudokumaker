@@ -1,12 +1,8 @@
 package com.erikleeness.concurrency.sudoku.solvers;
 
-import java.util.List;
-import java.util.Set;
-
 import com.erikleeness.concurrency.sudoku.Pair;
 import com.erikleeness.concurrency.sudoku.Sudoku;
 import com.erikleeness.concurrency.sudoku.Sudokus;
-import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 
 
@@ -86,8 +82,8 @@ public class SimpleEliminationSolver extends Solver
 	{
 		// Can any other cells in the row be n?
 		for (Pair<Integer, Integer> cellLocation : locations) {
-			if ( cellCanBeN( n, cellLocation ) && 
-					!cellLocation.equals(targetLocation)) {
+			if ( Sudokus.directConflictExistsBetween( n, cellLocation, workingPuzzle ) && 
+					! cellLocation.equals(targetLocation)) {
 				
 				return false;
 				
@@ -95,55 +91,5 @@ public class SimpleEliminationSolver extends Solver
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Returns false if it is trivial to see that the square cannot be N.
-	 * Returns true if there is a possibility, given what we know with the
-	 * supplied puzzle and te simple methods we're using.
-	 * 
-	 * Performs a number of internal checks and short circuits if any of them
-	 * evaluate to false.
-	 * 
-	 * @param puzzle	
-	 * @param n			number for the cell to be checked against
-	 * @param location	location of the cell to be checked
-	 * @return			false if the square can't be N, true if it might be
-	 */
-	private boolean cellCanBeN(Integer n, Pair<Integer, Integer> location)
-	{
-		// Is there an N in the cell's column?
-		List< Pair<Integer, Integer> > locationsInColumn = 
-				Pair.leftRange(Range.closed(1, 9), location.getRight());
-		
-		for (Pair<Integer, Integer> locationInColumn : locationsInColumn) {
-			if (workingPuzzle.get(locationInColumn) .equals (Optional.of(n))) {
-				return false;
-			}
-		}
-		
-		// Is there an N in the cell's row?
-		List< Pair<Integer, Integer> > locationsInRow = 
-				Pair.rightRange(location.getLeft(), Range.closed(1, 9));
-		
-		for (Pair<Integer, Integer> locationInRow : locationsInRow) {
-			if (workingPuzzle.get(locationInRow) .equals (Optional.of(n))) {
-				return false;
-			}
-		}
-		
-		// Is there an N in the cell's box?
-		Set< Optional<Integer> > locationsInBox = 
-				Sudokus.cellsInBoxOf(workingPuzzle, location);
-				
-		for (Optional<Integer> locationInBox : locationsInBox) {
-			if (locationInBox .equals (Optional.of(n))) {
-				return false;
-			}
-		}
-		
-		// We've done all we can
-		return true;
-		
 	}
 }

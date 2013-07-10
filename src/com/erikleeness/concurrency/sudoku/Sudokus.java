@@ -1,7 +1,7 @@
 package com.erikleeness.concurrency.sudoku;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.google.common.base.Optional;
@@ -80,6 +80,57 @@ public class Sudokus
 		default:
 			return new int[]{};
 		}
+	}
+
+	/**
+	 * Returns false if it is trivial to see that the square cannot be N.
+	 * Returns true if there is a possibility, given what we know with the
+	 * supplied puzzle and te simple methods we're using.
+	 * 
+	 * Performs a number of internal checks and short circuits if any of them
+	 * evaluate to false.
+	 * 
+	 * @param puzzle	
+	 * @param n			number for the cell to be checked against
+	 * @param location	location of the cell to be checked
+	 * @return			false if the square can't be N, true if it might be
+	 */
+	public static boolean directConflictExistsBetween(
+			Integer n, Pair<Integer, Integer> location, Sudoku puzzle)
+	{
+		// Is there an N in the cell's column?
+		List< Pair<Integer, Integer> > locationsInColumn = 
+				Pair.leftRange(Range.closed(1, 9), location.getRight());
+		
+		for (Pair<Integer, Integer> locationInColumn : locationsInColumn) {
+			if (puzzle.get(locationInColumn) .equals (Optional.of(n))) {
+				return false;
+			}
+		}
+		
+		// Is there an N in the cell's row?
+		List< Pair<Integer, Integer> > locationsInRow = 
+				Pair.rightRange(location.getLeft(), Range.closed(1, 9));
+		
+		for (Pair<Integer, Integer> locationInRow : locationsInRow) {
+			if (puzzle.get(locationInRow) .equals (Optional.of(n))) {
+				return false;
+			}
+		}
+		
+		// Is there an N in the cell's box?
+		Set< Optional<Integer> > locationsInBox = 
+				Sudokus.cellsInBoxOf(puzzle, location);
+				
+		for (Optional<Integer> locationInBox : locationsInBox) {
+			if (locationInBox .equals (Optional.of(n))) {
+				return false;
+			}
+		}
+		
+		// We've done all we can
+		return true;
+		
 	}
 
 }
