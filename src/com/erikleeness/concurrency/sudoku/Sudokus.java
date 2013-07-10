@@ -98,14 +98,9 @@ public class Sudokus
 	public static boolean directConflictExistsBetween(
 			Integer n, Pair<Integer, Integer> location, Sudoku puzzle)
 	{
-		// Is there an N in the cell's column?
-		List< Pair<Integer, Integer> > locationsInColumn = 
-				Pair.leftRange(Range.closed(1, 9), location.getRight());
-		
-		for (Pair<Integer, Integer> locationInColumn : locationsInColumn) {
-			if (puzzle.get(locationInColumn) .equals (Optional.of(n))) {
-				return false;
-			}
+		Optional<Integer> cellValue = puzzle.get(location);
+		if (cellValue.isPresent()) {
+			return !cellValue.get().equals(n);
 		}
 		
 		// Is there an N in the cell's row?
@@ -114,22 +109,33 @@ public class Sudokus
 		
 		for (Pair<Integer, Integer> locationInRow : locationsInRow) {
 			if (puzzle.get(locationInRow) .equals (Optional.of(n))) {
-				return false;
+				return true;
 			}
 		}
 		
+		// Is there an N in the cell's column?
+		List< Pair<Integer, Integer> > locationsInColumn = 
+				Pair.leftRange(Range.closed(1, 9), location.getRight());
+		
+		for (Pair<Integer, Integer> locationInColumn : locationsInColumn) {
+			if (puzzle.get(locationInColumn) .equals (Optional.of(n))) {
+				return true;
+			}
+		}
+
 		// Is there an N in the cell's box?
 		Set< Optional<Integer> > locationsInBox = 
 				Sudokus.cellsInBoxOf(puzzle, location);
 				
 		for (Optional<Integer> locationInBox : locationsInBox) {
 			if (locationInBox .equals (Optional.of(n))) {
-				return false;
+				return true;
 			}
 		}
 		
-		// We've done all we can
-		return true;
+		
+		// We've done all we can; there is nothing immediately stopping "location" from being N.
+		return false;
 		
 	}
 
