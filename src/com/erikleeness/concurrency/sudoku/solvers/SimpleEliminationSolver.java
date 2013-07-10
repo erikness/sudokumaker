@@ -35,6 +35,7 @@ public class SimpleEliminationSolver extends Solver
 		/* As a matter of convention, "target" refers to the cell pointed to by
 		 * rowKey and columnKey.
 		 */
+		this.targetLocation = targetLocation;
 		Integer targetRowKey = targetLocation.getLeft();
 		Integer targetColumnKey = targetLocation.getRight();
 		
@@ -49,19 +50,23 @@ public class SimpleEliminationSolver extends Solver
 			Iterable< Pair<Integer, Integer> > locationsInBox = 
 					Sudokus.locationsInBoxOf(workingPuzzle, targetRowKey, targetColumnKey);
 			
-			if (!anyCanBeN( n, locationsInRow )) {
-				return true;
-			}
-
-			if (!anyCanBeN( n, locationsInColumn )) {
-				return true;
-			}
-
-			if (!anyCanBeN( n, locationsInBox )) {
-				return true;
-			}
+			if ( ! Sudokus.directConflictExistsBetween(n, targetLocation, puzzle)) {
 				
-			
+				// If there IS a direct conflict between the target and N, then we shouldn't even
+				// bother checking if it's the only possible N (because of course it's not)
+				
+				if (!anyOthersCanBeN( n, locationsInRow )) {
+					return true;
+				}
+
+				if (!anyOthersCanBeN( n, locationsInColumn )) {
+					return true;
+				}
+
+				if (!anyOthersCanBeN( n, locationsInBox )) {
+					return true;
+				}
+			}
 		}
 
 		return nextSolver.confirmSolutionExistsFor(puzzle, targetLocation);
@@ -77,19 +82,20 @@ public class SimpleEliminationSolver extends Solver
 	 * @param n				number to check for
 	 * @return				true if any cell in locations can be n 
 	 */
-	public boolean anyCanBeN(Integer n,
+	public boolean anyOthersCanBeN(Integer n,
 			Iterable< Pair<Integer, Integer> > locations)
 	{
-		// Can any other cells in the row be n?
+		// Can any non-target cells in "locations" be n?
 		for (Pair<Integer, Integer> cellLocation : locations) {
-			if ( Sudokus.directConflictExistsBetween( n, cellLocation, workingPuzzle ) && 
-					! cellLocation.equals(targetLocation)) {
-				
-				return false;
+			if ( ! cellLocation.equals(targetLocation) &&
+				 ! Sudokus.directConflictExistsBetween( n, cellLocation, workingPuzzle )) {
+				return true;
 				
 			}
 		}
 		
-		return true;
+		// All items in locations have a direct conflict with n EXCEPT the target,
+		// therefore the target can be solved
+		return false;
 	}
 }
