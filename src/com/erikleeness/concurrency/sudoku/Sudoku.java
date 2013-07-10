@@ -6,16 +6,14 @@ import java.util.Map;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayTable;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Range;
 
 /**
  * @author ErikAdmin
  *
  */
-public class Sudoku {
+public class Sudoku 
+{
 	private ArrayTable<Integer, Integer, Optional<Integer>> matrix;
 	
 	public Sudoku(ArrayTable<Integer, Integer, Optional<Integer>> configuration)
@@ -30,7 +28,7 @@ public class Sudoku {
 	
 	public Optional<Integer> get(Pair<Integer, Integer> location)
 	{
-		return matrix.get(location.getLeft(), location.getRight());
+		return get(location.getLeft(), location.getRight());
 	}
 	
 	public void erase(Integer rowKey, Integer columnKey)
