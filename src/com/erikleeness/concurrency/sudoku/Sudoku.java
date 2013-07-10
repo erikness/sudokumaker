@@ -30,7 +30,12 @@ public class Sudoku
 		
 		for (int i = 0; i <= 8; i++) {
 			for (int j = 0; j <= 8; j++) {
-				cells.put(i+1, j+1, Optional.of(matrix[i][j]));
+				if (matrix[i][j] == 0) {
+					Optional<Integer> blank = Optional.absent();
+					cells.put(i+1, j+1, blank);
+				} else {
+					cells.put(i+1, j+1, Optional.of(matrix[i][j]));
+				}
 			}
 		}
 		
