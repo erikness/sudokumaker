@@ -1,6 +1,6 @@
-package concurrency.sudoku.solvers;
+package com.erikleeness.concurrency.sudoku.solvers;
 
-import concurrency.sudoku.Sudoku;
+import com.erikleeness.concurrency.sudoku.Sudoku;
 
 public class SingleCellSolver
 {

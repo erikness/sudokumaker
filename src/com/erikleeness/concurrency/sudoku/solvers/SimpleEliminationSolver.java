@@ -1,14 +1,14 @@
-package concurrency.sudoku.solvers;
+package com.erikleeness.concurrency.sudoku.solvers;
 
 import java.util.List;
 import java.util.Set;
 
+import com.erikleeness.concurrency.sudoku.Pair;
+import com.erikleeness.concurrency.sudoku.Sudoku;
+import com.erikleeness.concurrency.sudoku.Sudokus;
 import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 
-import concurrency.sudoku.Pair;
-import concurrency.sudoku.Sudoku;
-import concurrency.sudoku.Sudokus;
 
 public class SimpleEliminationSolver extends Solver
 {

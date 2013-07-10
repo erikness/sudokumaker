@@ -1,4 +1,4 @@
-package concurrency.sudoku;
+package com.erikleeness.concurrency.sudoku;
 
 
 import java.util.List;

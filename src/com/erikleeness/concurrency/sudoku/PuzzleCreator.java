@@ -1,13 +1,13 @@
-package concurrency.sudoku;
+package com.erikleeness.concurrency.sudoku;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+import com.erikleeness.concurrency.sudoku.solvers.SingleCellSolver;
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayTable;
 
-import concurrency.sudoku.solvers.SingleCellSolver;
 
 public class PuzzleCreator
 {

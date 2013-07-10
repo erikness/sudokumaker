@@ -1,4 +1,4 @@
-package concurrency.sudoku;
+package com.erikleeness.concurrency.sudoku;
 
 /**
  * Used to denote methods that mutate a given puzzle parameter.
