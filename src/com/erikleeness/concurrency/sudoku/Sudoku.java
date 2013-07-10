@@ -21,6 +21,22 @@ public class Sudoku
 		matrix = ArrayTable.create(configuration);
 	}
 	
+	public static Sudoku fromIntMatrix(int[][] matrix)
+	{
+		Iterable<Integer> rowKeys = Sudokus.intSeq(1, 9);
+		Iterable<Integer> colKeys = Sudokus.intSeq(1, 9);
+		ArrayTable<Integer, Integer, Optional<Integer>> cells;
+		cells = ArrayTable.create(rowKeys, colKeys);
+		
+		for (int i = 0; i <= 8; i++) {
+			for (int j = 0; j <= 8; j++) {
+				cells.put(i+1, j+1, Optional.of(matrix[i][j]));
+			}
+		}
+		
+		return new Sudoku(cells);
+	}
+	
 	public Optional<Integer> get(Integer rowKey, Integer columnKey)
 	{
 		return matrix.get(rowKey, columnKey);

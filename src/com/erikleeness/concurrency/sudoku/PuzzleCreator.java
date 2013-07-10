@@ -13,11 +13,6 @@ public class PuzzleCreator
 {
 	public static void main(String[] args)
 	{
-		Iterable<Integer> rowKeys = Sudokus.intSeq(1, 9);
-		Iterable<Integer> colKeys = Sudokus.intSeq(1, 9);
-		ArrayTable<Integer, Integer, Optional<Integer>> cells;
-		cells = ArrayTable.create(rowKeys, colKeys);
-		
 		int[][] temp_matrix = new int[][]{
 				{4, 9, 8,   7, 1, 6,   5, 2, 3},
 				{2, 7, 5,   3, 4, 8,   9, 6, 1},
@@ -32,13 +27,8 @@ public class PuzzleCreator
 				{9, 1, 6,   5, 7, 3,   2, 4, 8},
 		};
 		
-		for (int i = 0; i <= 8; i++) {
-			for (int j = 0; j <= 8; j++) {
-				cells.put(i+1, j+1, Optional.of(temp_matrix[i][j]));
-			}
-		}
 		
-		Sudoku puzzle1 = new Sudoku(cells);
+		Sudoku puzzle1 = Sudoku.fromIntMatrix(temp_matrix);
 		System.out.println(puzzle1);
 		PuzzleCreator puzzleCreator = new PuzzleCreator();
 		Sudoku puzzle1_unfinished = puzzleCreator.createPuzzleFromSolution(puzzle1);
