@@ -39,6 +39,11 @@ public class Sudoku {
 		matrix.put(rowKey, columnKey, blank);
 	}
 	
+	public void erase(Pair<Integer, Integer> location)
+	{
+		erase(location.getLeft(), location.getRight());
+	}
+	
 	public Sudoku copy()
 	{
 		return new Sudoku(ArrayTable.create(matrix));
@@ -86,6 +91,11 @@ public class Sudoku {
 	public void put(int rowKey, int columnKey, Optional<Integer> value)
 	{
 		matrix.put(rowKey, columnKey, value);
+	}
+	
+	public void put(Pair<Integer, Integer> location, Optional<Integer> value)
+	{
+		put(location.getLeft(), location.getRight(), value);
 	}
 	
 	public int size()

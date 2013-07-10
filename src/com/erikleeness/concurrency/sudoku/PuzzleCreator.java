@@ -56,29 +56,29 @@ public class PuzzleCreator
 		while (workingPuzzle.size() != checkedCells.size()) {
 			
 			Random randomGenerator = new Random();
-			int rowKey = randomGenerator.nextInt(9) + 1;
-			int columnKey = randomGenerator.nextInt(9) + 1;
+			int targetRowKey = randomGenerator.nextInt(9) + 1;
+			int targetColumnKey = randomGenerator.nextInt(9) + 1;
+			Pair<Integer, Integer> targetLocation = Pair.of(targetRowKey, targetColumnKey);
 			
-			if (checkedCells.contains(
-					new Pair<Integer, Integer>(rowKey, columnKey))) {
+			if (checkedCells.contains( targetLocation )) {
 				continue;
 			}
 			
-			Optional<Integer> candidate = workingPuzzle.get(rowKey, columnKey);
+			Optional<Integer> candidate = workingPuzzle.get(targetLocation);
 			
 			if (candidate.isPresent()) {
 				
-				workingPuzzle.erase(rowKey, columnKey);
+				workingPuzzle.erase(targetLocation);
 				
 				SingleCellSolver solver = new SingleCellSolver();
-				boolean cellCanBeSolved = solver.confirmSolutionExistsFor(workingPuzzle, rowKey, columnKey);
+				boolean cellCanBeSolved = solver.confirmSolutionExistsFor(workingPuzzle, targetLocation);
 				
 				if (!cellCanBeSolved) {
 					// We must put the value back
-					workingPuzzle.put(rowKey, columnKey, candidate);
+					workingPuzzle.put(targetLocation, candidate);
 				}
 				
-				checkedCells.add(new Pair<Integer, Integer>(rowKey, columnKey));
+				checkedCells.add(targetLocation);
 			}
 		}
 		

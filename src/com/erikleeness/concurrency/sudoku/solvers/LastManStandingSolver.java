@@ -3,6 +3,7 @@ package com.erikleeness.concurrency.sudoku.solvers;
 import java.util.Collection;
 import java.util.Set;
 
+import com.erikleeness.concurrency.sudoku.Pair;
 import com.erikleeness.concurrency.sudoku.Sudoku;
 import com.erikleeness.concurrency.sudoku.Sudokus;
 import com.google.common.base.Optional;
@@ -21,19 +22,21 @@ public class LastManStandingSolver extends Solver
 	 * 
 	 */
 	@Override
-	public boolean confirmSolutionExistsFor(Sudoku puzzle, Integer rowKey, Integer columnKey) {
+	public boolean confirmSolutionExistsFor(Sudoku puzzle, Pair<Integer, Integer> targetLocation) {
 		
 		Sudoku workingPuzzle = puzzle.copy();
+		Integer targetRowKey = targetLocation.getLeft();
+		Integer targetColumnKey = targetLocation.getRight();
 		
-		Set<Optional<Integer>> cellsInBox = Sudokus.cellsInBoxOf(workingPuzzle, rowKey, columnKey); 
+		Set<Optional<Integer>> cellsInBox = Sudokus.cellsInBoxOf(workingPuzzle, targetLocation); 
 		int cellsInBoxCount =  countFilledCells(cellsInBox);
 		
 		Collection<Optional<Integer>> cellsInRow;
-		cellsInRow = workingPuzzle.row(rowKey).values();
+		cellsInRow = workingPuzzle.row(targetRowKey).values();
 		int cellsInRowCount =  countFilledCells(cellsInRow);
 		
 		Collection<Optional<Integer>> cellsInColumn;
-		cellsInColumn = workingPuzzle.column(columnKey).values();
+		cellsInColumn = workingPuzzle.column(targetColumnKey).values();
 		int cellsInColumnCount =  countFilledCells(cellsInColumn);
 		
 		
@@ -44,7 +47,7 @@ public class LastManStandingSolver extends Solver
 			// The cell in question can be found if it is removed at this point
 			return true;
 		} else {
-			return nextSolver.confirmSolutionExistsFor(puzzle, rowKey, columnKey);
+			return nextSolver.confirmSolutionExistsFor(puzzle, targetLocation);
 		}
 
 	}

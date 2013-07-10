@@ -34,22 +34,24 @@ public class SimpleEliminationSolver extends Solver
 	 * square can be solved.
 	 */
 	@Override
-	public boolean confirmSolutionExistsFor(Sudoku puzzle, Integer rowKey, Integer columnKey)
+	public boolean confirmSolutionExistsFor(Sudoku puzzle, Pair<Integer, Integer> targetLocation)
 	{
 		/* As a matter of convention, "target" refers to the cell pointed to by
 		 * rowKey and columnKey.
 		 */
+		Integer targetRowKey = targetLocation.getLeft();
+		Integer targetColumnKey = targetLocation.getRight();
+		
 		workingPuzzle = puzzle.copy();
-		targetLocation = Pair.of(rowKey, columnKey);
 		
 		for (Integer n : Sudokus.intSeq(1, 9)) {
 			
 			Iterable< Pair<Integer, Integer> > locationsInRow = 
-					Pair.rightRange( rowKey, Range.closed(1, 9));
+					Pair.rightRange( targetRowKey, Range.closed(1, 9));
 			Iterable< Pair<Integer, Integer> > locationsInColumn = 
-					Pair.leftRange( Range.closed(1, 9), columnKey);
+					Pair.leftRange( Range.closed(1, 9), targetColumnKey);
 			Iterable< Pair<Integer, Integer> > locationsInBox = 
-					Sudokus.locationsInBoxOf(workingPuzzle, rowKey, columnKey);
+					Sudokus.locationsInBoxOf(workingPuzzle, targetRowKey, targetColumnKey);
 			
 			if (!anyCanBeN( n, locationsInRow )) {
 				return true;
@@ -66,7 +68,7 @@ public class SimpleEliminationSolver extends Solver
 			
 		}
 
-		return nextSolver.confirmSolutionExistsFor(puzzle, rowKey, columnKey);
+		return nextSolver.confirmSolutionExistsFor(puzzle, targetLocation);
 	}
 	
 	/**

@@ -1,5 +1,6 @@
 package com.erikleeness.concurrency.sudoku.solvers;
 
+import com.erikleeness.concurrency.sudoku.Pair;
 import com.erikleeness.concurrency.sudoku.Sudoku;
 
 public abstract class Solver {
@@ -11,5 +12,5 @@ public abstract class Solver {
 		this.nextSolver = nextSolver;
 	}
 	
-	public abstract boolean confirmSolutionExistsFor(Sudoku puzzle, Integer rowKey, Integer columnKey);
+	public abstract boolean confirmSolutionExistsFor(Sudoku puzzle, Pair<Integer, Integer> targetLocation);
 }

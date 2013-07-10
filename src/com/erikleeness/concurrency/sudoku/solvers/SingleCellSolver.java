@@ -1,5 +1,6 @@
 package com.erikleeness.concurrency.sudoku.solvers;
 
+import com.erikleeness.concurrency.sudoku.Pair;
 import com.erikleeness.concurrency.sudoku.Sudoku;
 
 public class SingleCellSolver
@@ -15,8 +16,8 @@ public class SingleCellSolver
 				new FailureSolver(null)))));
 	}
 	
-	public boolean confirmSolutionExistsFor(Sudoku puzzle, Integer rowKey, Integer columnKey) {
-		return nextSolver.confirmSolutionExistsFor(puzzle, rowKey, columnKey);
+	public boolean confirmSolutionExistsFor(Sudoku puzzle, Pair<Integer, Integer> targetLocation) {
+		return nextSolver.confirmSolutionExistsFor(puzzle, targetLocation);
 	}
 
 }
