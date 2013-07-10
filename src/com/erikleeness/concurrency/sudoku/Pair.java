@@ -103,7 +103,7 @@ public class Pair<L,R> {
 		  
 		  final Iterator< Pair<Integer, Integer> > resultIterator = new Iterator< Pair<Integer, Integer> >() {
 			  
-			  private final Iterator<Integer> leftIterator;
+			  private Iterator<Integer> leftIterator;
 			  private Iterator<Integer> rightIterator;
 			  
 			  private Integer leftCurrent;
@@ -116,7 +116,7 @@ public class Pair<L,R> {
 			  
 			  public boolean hasNext() 
 			  {
-				  return leftIterator.hasNext();
+				  return leftIterator.hasNext() || rightIterator.hasNext();
 			  }
 			  
 			  public Pair<Integer, Integer> next()
