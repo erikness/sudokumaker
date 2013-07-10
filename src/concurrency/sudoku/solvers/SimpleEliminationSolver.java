@@ -12,7 +12,9 @@ import concurrency.sudoku.Sudokus;
 
 public class SimpleEliminationSolver extends Solver
 {
-
+	private Sudoku workingPuzzle;
+	private Pair<Integer, Integer> targetLocation;
+	
 	public SimpleEliminationSolver(Solver nextSolver)
 	{
 		super(nextSolver);
@@ -37,59 +39,60 @@ public class SimpleEliminationSolver extends Solver
 		/* As a matter of convention, "target" refers to the cell pointed to by
 		 * rowKey and columnKey.
 		 */
-		Sudoku workingPuzzle = puzzle.copy();
+		workingPuzzle = puzzle.copy();
+		targetLocation = Pair.of(rowKey, columnKey);
 		
 		for (Integer n : Sudokus.intSeq(1, 9)) {
 			
-			boolean targetIsOnlyNPossibleInRow = true;
-			boolean targetIsOnlyNPossibleInColumn = true;
-			boolean targetIsOnlyNPossibleInBox = true;
+			Iterable< Pair<Integer, Integer> > locationsInRow = 
+					Pair.rightRange( rowKey, Range.closed(1, 9));
+			Iterable< Pair<Integer, Integer> > locationsInColumn = 
+					Pair.leftRange( Range.closed(1, 9), columnKey);
+			Iterable< Pair<Integer, Integer> > locationsInBox = 
+					Sudokus.locationsInBoxOf(workingPuzzle, rowKey, columnKey);
 			
-			// Can any other cells in the row be n?
-			List< Pair<Integer, Integer> > locationsInRow = Pair.rightRange( rowKey, Range.closed(1, 9) );
-			for (Pair<Integer, Integer> cellLocation : locationsInRow) {
-				if (cellCanBeN( workingPuzzle, n, cellLocation )) {
-					targetIsOnlyNPossibleInRow = false;
-					break;
-				}
-			}
-			
-			if (targetIsOnlyNPossibleInRow) {
-				// Well fuck yeah, the square can be solved!
+			if (!anyCanBeN( n, locationsInRow )) {
 				return true;
-			}
-			
-			// Can any other cells in the row be n?
-			List< Pair<Integer, Integer> > locationsInColumn = Pair.rightRange( rowKey, Range.closed(1, 9) );
-			for (Pair<Integer, Integer> cellLocation : locationsInColumn) {
-				if (cellCanBeN( workingPuzzle, n, cellLocation )) {
-					targetIsOnlyNPossibleInColumn = false;
-					break;
-				}
-			}
-			
-			if (targetIsOnlyNPossibleInColumn) {
-				// Well fuck yeah, the square can be solved!
-				return true;
-			}
-			
-			// Can any other cells in the row be n?
-			Iterable< Pair<Integer, Integer> > locationsInBox = Sudokus.locationsInBoxOf(workingPuzzle, rowKey, columnKey);
-			for (Pair<Integer, Integer> cellLocation : locationsInBox) {
-				if (cellCanBeN( workingPuzzle, n, cellLocation )) {
-					targetIsOnlyNPossibleInBox = false;
-					break;
-				}
 			}
 
-			if (targetIsOnlyNPossibleInBox) {
-				// Well fuck yeah, the square can be solved!
+			if (!anyCanBeN( n, locationsInColumn )) {
 				return true;
 			}
+
+			if (!anyCanBeN( n, locationsInBox )) {
+				return true;
+			}
+				
 			
 		}
 
 		return nextSolver.confirmSolutionExistsFor(puzzle, rowKey, columnKey);
+	}
+	
+	/**
+	 * Returns true if any of the cells in the locations provided can possibly
+	 * be N (see cellCanBeN for specific criteria).
+	 * 
+	 * Returns false if none of them can possible be N.
+	 * 
+	 * @param locations		iterable of locations to check against
+	 * @param n				number to check for
+	 * @return				true if any cell in locations can be n 
+	 */
+	public boolean anyCanBeN(Integer n,
+			Iterable< Pair<Integer, Integer> > locations)
+	{
+		// Can any other cells in the row be n?
+		for (Pair<Integer, Integer> cellLocation : locations) {
+			if ( cellCanBeN( n, cellLocation ) && 
+					!cellLocation.equals(targetLocation)) {
+				
+				return false;
+				
+			}
+		}
+		
+		return true;
 	}
 	
 	/**
@@ -105,15 +108,14 @@ public class SimpleEliminationSolver extends Solver
 	 * @param location	location of the cell to be checked
 	 * @return			false if the square can't be N, true if it might be
 	 */
-	private boolean cellCanBeN(
-			Sudoku puzzle, Integer n, Pair<Integer, Integer> location)
+	private boolean cellCanBeN(Integer n, Pair<Integer, Integer> location)
 	{
 		// Is there an N in the cell's column?
 		List< Pair<Integer, Integer> > locationsInColumn = 
 				Pair.leftRange(Range.closed(1, 9), location.getRight());
 		
 		for (Pair<Integer, Integer> locationInColumn : locationsInColumn) {
-			if (puzzle.get(locationInColumn) .equals (Optional.of(n))) {
+			if (workingPuzzle.get(locationInColumn) .equals (Optional.of(n))) {
 				return false;
 			}
 		}
@@ -123,14 +125,14 @@ public class SimpleEliminationSolver extends Solver
 				Pair.rightRange(location.getLeft(), Range.closed(1, 9));
 		
 		for (Pair<Integer, Integer> locationInRow : locationsInRow) {
-			if (puzzle.get(locationInRow) .equals (Optional.of(n))) {
+			if (workingPuzzle.get(locationInRow) .equals (Optional.of(n))) {
 				return false;
 			}
 		}
 		
 		// Is there an N in the cell's box?
 		Set< Optional<Integer> > locationsInBox = 
-				Sudokus.cellsInBoxOf(puzzle, location);
+				Sudokus.cellsInBoxOf(workingPuzzle, location);
 				
 		for (Optional<Integer> locationInBox : locationsInBox) {
 			if (locationInBox .equals (Optional.of(n))) {
