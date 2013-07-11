@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.erikleeness.concurrency.sudoku.solvers.SingleCellSolver;
 import com.google.common.base.Optional;
-import com.google.common.collect.ArrayTable;
 
 
 public class PuzzleCreator
